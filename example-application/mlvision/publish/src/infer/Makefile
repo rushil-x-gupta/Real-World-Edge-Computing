@@ -2,9 +2,9 @@
 # Makefile : infer : machine inferencing
 #
 
-IMAGE_NAME = rg.example.infer_amd64:1.0.0
+export ARCH ?= ${shell uname -p}
 
-export ARCH ?= amd64
+IMAGE_NAME = rg.example.infer_${ARCH}:1.0.0
 
 # all: build push
 
@@ -18,7 +18,7 @@ push:
 	docker push ${CR_USERNAME}/${IMAGE_NAME}
 
 run:
-	docker run \
+	docker run -it \
 	-e APP_MODEL_FMWK="tflite" \
 	-e APP_MODEL_DIR="/var/local/horizon/ml/model/tflite" \
 	-e APP_ML_MODEL="tflite-model-1.0.0-mms.zip" \
@@ -29,12 +29,14 @@ run:
 	-e APP_VIEW_COLUMNS="1" \
 	-e DEVICE_ID="wsl2" \
 	-e DEVICE_NAME="WSL2" \
-	-e DEVICE_IP_ADDRESS="localhost" \
+	-e DEVICE_IP_ADDRESS="" \
 	-e SHOW_OVERLAY="true" \
 	-e PUBLISH_STREAM="true" \
 	-e MIN_CONFIDENCE_THRESHOLD="0.6" \
+	-e HTTP_PUBLISH_STREAM_URL="" \
 	-v "/var/local/horizon/ml/model/tflite":"/var/local/horizon/ml/model/tflite" \
-	${CR_USERNAME}/${IMAGE_NAME}
+	-v "/var/local/horizon/sample/video":"/var/local/horizon/sample/video" \
+	${CR_USERNAME}/${IMAGE_NAME} /bin/bash
 
 
 
