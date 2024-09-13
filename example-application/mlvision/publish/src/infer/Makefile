@@ -14,29 +14,28 @@ build:
 
 # Push the docker container to the DockerHub registry
 push:
-	docker login -u ${CR_USERNAME} -p ${CR_DOCKER_APIKEY} ${CR_HOST}
+	docker login -u ${CR_USERNAME} -p ${CR_DOCKER_RW_APIKEY}
 	docker push ${CR_USERNAME}/${IMAGE_NAME}
 
 run:
-	docker run -it \
-	-e APP_MODEL_FMWK="tflite" \
-	-e APP_MODEL_DIR="/var/local/horizon/ml/model/tflite" \
-	-e APP_ML_MODEL="tflite-model-1.0.0-mms.zip" \
-	-e APP_VIDEO_FILES="/var/local/horizon/sample/video/sample-video.mp4" \
-	-e APP_BIND_HORIZON_DIR=/var/local/horizon \
-	-e APP_CAMERAS="-" \
-	-e APP_RTSPS="-" \
-	-e APP_VIEW_COLUMNS="1" \
-	-e DEVICE_ID="wsl2" \
-	-e DEVICE_NAME="WSL2" \
-	-e DEVICE_IP_ADDRESS="" \
-	-e SHOW_OVERLAY="true" \
-	-e PUBLISH_STREAM="true" \
-	-e MIN_CONFIDENCE_THRESHOLD="0.6" \
-	-e HTTP_PUBLISH_STREAM_URL="" \
-	-v "/var/local/horizon/ml/model/tflite":"/var/local/horizon/ml/model/tflite" \
-	-v "/var/local/horizon/sample/video":"/var/local/horizon/sample/video" \
-	${CR_USERNAME}/${IMAGE_NAME} /bin/bash
+	docker login -u ${CR_USERNAME} -p ${CR_DOCKER_RW_APIKEY}
+	docker run \
+	-e APP_MODEL_FMWK="${APP_MODEL_FMWK}" \
+	-e APP_MODEL_DIR="${APP_MODEL_DIR}" \
+	-e APP_ML_MODEL="${APP_ML_MODEL}" \
+	-e APP_VIDEO_FILES="${APP_VIDEO_FILES}" \
+	-e APP_BIND_HORIZON_DIR="${APP_BIND_HORIZON_DIR}" \
+	-e APP_CAMERAS="${APP_CAMERAS}" \
+	-e APP_RTSPS="${APP_RTSPS}" \
+	-e APP_VIEW_COLUMNS="${APP_VIEW_COLUMNS}" \
+	-e DEVICE_ID="${DEVICE_ID}" \
+	-e DEVICE_NAME="${DEVICE_NAME}" \
+	-e DEVICE_IP_ADDRESS="${DEVICE_IP_ADDRESS}" \
+	-e SHOW_OVERLAY="${SHOW_OVERLAY}" \
+	-e PUBLISH_STREAM="${PUBLISH_STREAM}" \
+	-e MIN_CONFIDENCE_THRESHOLD="${MIN_CONFIDENCE_THRESHOLD}" \
+	-e HTTP_PUBLISH_STREAM_URL="${HTTP_PUBLISH_STREAM_URL}" \
+	-v "${APP_BIND_HORIZON_DIR}":"${APP_BIND_HORIZON_DIR}" ${CR_USERNAME}/${IMAGE_NAME}
 
 
 
