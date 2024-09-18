@@ -7,6 +7,7 @@ import datetime
 
 from package.detect.baseOpenCV import BaseOpenCV
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv 
 class TFLiteOpenCV(BaseOpenCV):
     def __init__(self):
         super().__init__()
@@ -28,6 +29,8 @@ class TFLiteOpenCV(BaseOpenCV):
                 # Draw label
                 object_name = labels[int(classes[i])]
                 label = '%s: %d%%' % (object_name,  int(scores[i] * 100))
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
+
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
                 label_ymin = max(ymin, labelSize[1] + 8)
                 cv2.rectangle(frame_current, (xmin, label_ymin - labelSize[1] - 10), (xmin + labelSize[0], label_ymin + baseLine - 10), (255, 255, 255), cv2.FILLED)
@@ -65,3 +68,4 @@ class TFLiteOpenCV(BaseOpenCV):
 
         return entities_dict 
         
+    

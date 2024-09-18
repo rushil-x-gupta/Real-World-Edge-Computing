@@ -33,6 +33,7 @@ class VideoSourceProcessor:
         videoStream.startThread()
         time.sleep(1)
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      REPLACE with if self.config.getIsPTH() ...
         if self.config.getIsTFLite():
             from package.detect.tflite import TFLiteDetector
             from package.detect.tflite import TFLiteOpenCV
@@ -59,7 +60,7 @@ class VideoSourceProcessor:
                     videoSource.setDetector(TFLiteDetector(self.config, "update"))
                 
             videoStream.stop()
-
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def update(self, config, video_sources, video_source, labels, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):
         entities_dict = opencv.annotateFrame(config, labels, frame_current, video_source.getName(), frame_faces, frame_gray, boxes, classes, scores)

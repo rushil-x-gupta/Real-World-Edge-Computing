@@ -45,8 +45,10 @@ class Config:
         self.reloadTFLiteModel = False
         self.detectorInitialized = False
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv
         if self.getIsTFLite():
             self.setTFLiteDefaults()
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
         print ("{:.7f} Config initialized".format(time.time()))
 
@@ -55,10 +57,13 @@ class Config:
 
     def getDetectorInitialized(self):
         return self.detectorInitialized
-        
+
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getIsPTH func  
     def getIsTFLite(self):
         return self.fmwk == 'tflite'
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT setPTHDefaults func
     # os.path.join - leading / only for the first path. NO leading / in sub paths
     def setTFLiteDefaults(self):
         self.detectTFLite = "detect.tflite"
@@ -71,6 +76,7 @@ class Config:
         with zipfile.ZipFile(os.path.join(self.defaultModelDir, self.defaultModelTFLite), 'r') as zip_ref:
             zip_ref.extractall(self.defaultModelDir)
             zip_ref.close()
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getObjectName(self):
         return self.objectName
@@ -78,24 +84,31 @@ class Config:
     def getModelDir(self):
         return self.defaultModelDir if self.modelDir is None else self.modelDir
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPTH func
     def getModelTFLite(self):
         return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmap(self):
         return self.labelmap
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPathPTH func
     def getModelPathTFLite(self):
         return os.path.join(self.getModelDir(), self.detectTFLite)
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmapPath(self):
         return os.path.join(self.getModelDir(), self.getLabelmap())
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPathPTHUpdate func
     def getModelPathTFLiteUpdate(self):
         return os.path.join(self.modelDirTFLiteUpdateNextV12, self.detectTFLite)
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmapPathUpdate(self):
         return os.path.join(self.modelDirTFLiteUpdateNextV12, self.getLabelmap())
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv
     #cycle v1 or v2
     def getModelDirTFLiteUpdateNext(self):
         if os.path.exists(os.path.join(self.getModelDir(), "v1", self.detectTFLite)):
@@ -109,6 +122,7 @@ class Config:
             vDir = os.path.join(self.getModelDir(), "v1")
             os.makedirs(vDir)
             return vDir
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
             
     def getAppCameras(self, limit):
         if 'APP_CAMERAS' in os.environ:
