@@ -58,12 +58,12 @@ class Config:
     def getDetectorInitialized(self):
         return self.detectorInitialized
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getIsPTH func  
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getIsPTH func  
     def getIsTFLite(self):
         return self.fmwk == 'tflite'
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT setPTHDefaults func
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD setPTHDefaults func
     # os.path.join - leading / only for the first path. NO leading / in sub paths
     def setTFLiteDefaults(self):
         self.detectTFLite = "detect.tflite"
@@ -84,7 +84,7 @@ class Config:
     def getModelDir(self):
         return self.defaultModelDir if self.modelDir is None else self.modelDir
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPTH func
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPTH func
     def getModelTFLite(self):
         return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
@@ -92,7 +92,7 @@ class Config:
     def getLabelmap(self):
         return self.labelmap
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPathPTH func
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPathPTH func
     def getModelPathTFLite(self):
         return os.path.join(self.getModelDir(), self.detectTFLite)
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
@@ -100,7 +100,7 @@ class Config:
     def getLabelmapPath(self):
         return os.path.join(self.getModelDir(), self.getLabelmap())
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      INSERT getModelPathPTHUpdate func
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPathPTHUpdate func
     def getModelPathTFLiteUpdate(self):
         return os.path.join(self.modelDirTFLiteUpdateNextV12, self.detectTFLite)
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
@@ -287,9 +287,13 @@ class Config:
     def mmsPoller(self):
         Thread(target=self.mmsModelProcessor, args=(self.mms_polling_interval,)).start()
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getReloadPTHModel func
     def getReloadTFLiteModel(self):
         return self.reloadTFLiteModel
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD setReloadPTHModel func
     def setReloadTFLiteModel(self, flag):
         self.reloadTFLiteModel = flag
+#^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 

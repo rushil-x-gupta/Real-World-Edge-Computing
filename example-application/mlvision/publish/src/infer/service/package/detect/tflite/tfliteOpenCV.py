@@ -7,7 +7,7 @@ import datetime
 
 from package.detect.baseOpenCV import BaseOpenCV
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv 
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv CREATE new director (pth) and CREATE pthOpenCV file
 class TFLiteOpenCV(BaseOpenCV):
     def __init__(self):
         super().__init__()

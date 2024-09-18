@@ -33,7 +33,7 @@ class VideoSourceProcessor:
         videoStream.startThread()
         time.sleep(1)
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      REPLACE with if self.config.getIsPTH() ...
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD if self.config.getIsPTH() ...
         if self.config.getIsTFLite():
             from package.detect.tflite import TFLiteDetector
             from package.detect.tflite import TFLiteOpenCV

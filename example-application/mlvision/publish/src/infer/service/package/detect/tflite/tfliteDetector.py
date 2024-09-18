@@ -41,7 +41,7 @@ class TFLiteDetector:
     def getLabels(self):
         return self.labels
 
-#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      REPLACE with predict()
+#vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD predict()
     def infer(self, frame_normalized):
         t1 = time.time()
         self.interpreter.set_tensor(self.getInputDetailsIndex(), frame_normalized)
