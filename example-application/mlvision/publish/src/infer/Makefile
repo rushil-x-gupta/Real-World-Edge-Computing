@@ -4,13 +4,16 @@
 
 export ARCH ?= ${shell uname -p}
 
-IMAGE_NAME = rg.example.infer_${ARCH}:1.0.0
+IMAGE_NAME = rg.example.infer.${APP_MODEL_FMWK}_${ARCH}:1.0.0
 
 # all: build push
 
 # Build the docker container
-build:
-	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${ARCH} .
+build-tflite-cpu:
+	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cpu.${ARCH} .
+
+build-pth-cpu:
+	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cpu.${ARCH} .
 
 # Push the docker container to the DockerHub registry
 push:

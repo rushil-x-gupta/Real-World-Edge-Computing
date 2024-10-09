@@ -60,6 +60,35 @@ class VideoSourceProcessor:
                     videoSource.setDetector(TFLiteDetector(self.config, "update"))
                 
             videoStream.stop()
+        
+        else:
+            from package.detect.pth import PTHDetector
+            from package.detect.pth import PTHOpenCV
+
+            videoSource.setDetector(PTHDetector(self.config))
+            opencv = PTHOpenCV()
+            self.config.setDetectorInitialized(True)
+
+            print ("{:.7f} VideoSourceProcessor PTH detection loop begins index ".format(time.time()), index, end="\n", flush=True)
+            while True:
+                detector = videoSource.getDetector()
+                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_current)
+                self.update(self.config, self.videoSources, videoSource, [], opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+
+                if self.config.getReloadPTHModel():
+                    self.config.setReloadPTHModel(False)
+                    for vSource in self.videoSources:
+                        vSource.setReloadModel(True)
+
+                if videoSource.getReloadModel():
+                    videoSource.setReloadModel(False)
+                    videoSource.setDetector(PTHDetector(self.config))
+                
+                #if detector.getModelPath() != self.config.getModelPathPTH():
+                #    detector = PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"])
+
+            videoStream.stop()
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def update(self, config, video_sources, video_source, labels, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):

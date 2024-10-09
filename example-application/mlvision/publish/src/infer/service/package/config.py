@@ -48,6 +48,8 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv
         if self.getIsTFLite():
             self.setTFLiteDefaults()
+        else:
+            self.setPTHDefaults()
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
         print ("{:.7f} Config initialized".format(time.time()))
@@ -61,6 +63,9 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getIsPTH func  
     def getIsTFLite(self):
         return self.fmwk == 'tflite'
+    
+    def getIsPTH(self):
+        return self.fmwk == 'pth'
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD setPTHDefaults func
@@ -76,6 +81,13 @@ class Config:
         with zipfile.ZipFile(os.path.join(self.defaultModelDir, self.defaultModelTFLite), 'r') as zip_ref:
             zip_ref.extractall(self.defaultModelDir)
             zip_ref.close()
+    
+    def setPTHDefaults(self):
+        self.tool = "Pytorch OpenCV"
+        self.modelPTH = None
+        self.defaultModelDir = os.environ['APP_MODEL_DIR']
+        self.defaultModelPTH = "default-" + os.environ['APP_ML_MODEL']
+        self.modelObjectId = self.defaultModelPTH
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getObjectName(self):
@@ -87,6 +99,9 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPTH func
     def getModelTFLite(self):
         return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
+    
+    def getModelPTH(self):
+        return self.defaultModelPTH if self.modelPTH is None else self.modelPTH
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmap(self):
@@ -95,6 +110,9 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPathPTH func
     def getModelPathTFLite(self):
         return os.path.join(self.getModelDir(), self.detectTFLite)
+
+    def getModelPathPTH(self):
+        return os.path.join(self.getModelDir(), self.detectPTH)
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmapPath(self):
@@ -103,6 +121,9 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getModelPathPTHUpdate func
     def getModelPathTFLiteUpdate(self):
         return os.path.join(self.modelDirTFLiteUpdateNextV12, self.detectTFLite)
+
+    def getModelPathPTHUpdate(self):
+        return os.path.join(self.modelDirPTHUpdateNextV12, self.detectPTH)
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
     def getLabelmapPathUpdate(self):
@@ -118,6 +139,19 @@ class Config:
             return vDir
         else:
             if os.path.exists(os.path.join(self.getModelDir(), "v2", self.detectTFLite)):
+                shutil.rmtree(os.path.join(self.getModelDir(), "v2"))
+            vDir = os.path.join(self.getModelDir(), "v1")
+            os.makedirs(vDir)
+            return vDir
+    
+    def getModelDirPTHUpdateNext(self):
+        if os.path.exists(os.path.join(self.getModelDir(), "v1", self.detectPTH)):
+            shutil.rmtree(os.path.join(self.getModelDir(), "v1"))
+            vDir = os.path.join(self.getModelDir(), "v2")
+            os.makedirs(vDir)
+            return vDir
+        else:
+            if os.path.exists(os.path.join(self.getModelDir(), "v2", self.detectPTH)):
                 shutil.rmtree(os.path.join(self.getModelDir(), "v2"))
             vDir = os.path.join(self.getModelDir(), "v1")
             os.makedirs(vDir)
@@ -290,10 +324,16 @@ class Config:
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD getReloadPTHModel func
     def getReloadTFLiteModel(self):
         return self.reloadTFLiteModel
+    
+    def getReloadPTHModel(self):
+        return self.reloadPTHModel
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv      ADD setReloadPTHModel func
     def setReloadTFLiteModel(self, flag):
         self.reloadTFLiteModel = flag
+    
+    def setReloadPTHModel(self, flag):
+        self.reloadPTHModel = flag
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
 
