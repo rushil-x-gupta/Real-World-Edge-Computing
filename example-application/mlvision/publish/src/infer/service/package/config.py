@@ -43,6 +43,7 @@ class Config:
 
         self.modelUpdatedAt = datetime.datetime.now()
         self.reloadTFLiteModel = False
+        self.reloadPTHModel = False
         self.detectorInitialized = False
 
 #vvvvvvvvvvvvvvvvvvv---change for pytorch---vvvvvvvvvvvvvvvvvvv
@@ -83,6 +84,7 @@ class Config:
             zip_ref.close()
     
     def setPTHDefaults(self):
+        self.detectPTH = os.environ['APP_ML_MODEL']
         self.tool = "Pytorch OpenCV"
         self.modelPTH = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']

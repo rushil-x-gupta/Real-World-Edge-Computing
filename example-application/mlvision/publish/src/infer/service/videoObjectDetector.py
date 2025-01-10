@@ -88,9 +88,9 @@ if __name__ == '__main__':
                 videoSourceProcessor.processThread(index, True)
                 index += 1
             
-    if videoSourceProcessor is None:
-        print ("{:.7f} No video source found".format(time.time()), end="\n", flush=True)
-    else:
-        config.mmsPoller()
+    # if videoSourceProcessor is None:
+    #     print ("{:.7f} No video source found".format(time.time()), end="\n", flush=True)
+    # else:
+    #     config.mmsPoller()
             
     
