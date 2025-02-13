@@ -65,7 +65,7 @@ class VideoSourceProcessor:
             from package.detect.pth import PTHDetector
             from package.detect.pth import PTHOpenCV
 
-            videoSource.setDetector(PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"]))
+            videoSource.setDetector(PTHDetector(self.config))
             opencv = PTHOpenCV()
             self.config.setDetectorInitialized(True)
 
@@ -84,10 +84,10 @@ class VideoSourceProcessor:
 
                 if videoSource.getReloadModel():
                     videoSource.setReloadModel(False)
-                    videoSource.setDetector(PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"]))
+                    videoSource.setDetector(PTHDetector(self.config))
                 
-                if detector.getModelPath() != self.config.getModelPathPTH():
-                    detector = PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"])
+                # if detector.getModelPath() != self.config.getModelPathPTH():
+                #     detector = PTHDetector(self.config)
 
             videoStream.stop()
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^

@@ -30,3 +30,8 @@ Checking Jetpack version
 ```
 apt-cache show nvidia-jetpack
 ```
+
+Cleaning up docker images
+```
+docker rmi -f $(docker images -aq)
+```

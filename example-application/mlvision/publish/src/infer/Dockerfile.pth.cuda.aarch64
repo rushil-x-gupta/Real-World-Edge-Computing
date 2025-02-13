@@ -1,57 +1,45 @@
+# READ:
+# As JetPack keeps evolving it's important to keep up with it.
+# To check the nvidia-jetpack version and details
+#
+# sudo apt-cache show nvidia-jetpack
+#
+# View available nvidia-jetpack base images to use
+# https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch
+#
+# JetPack 5.1 (L4T R35.2.1)
+#   l4t-pytorch:r35.2.1-pth2.0-py3
+#     PyTorch v2.0.0
+#     torchvision v0.14.1
+#     torchaudio v0.13.1
+#
+# JetPack 4.5 (L4T R32.5.0)
+#   nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3
+#   l4t-pytorch:r32.5.0-pth1.6-py3
+#     python 3.6.9
+#     PyTorch v1.6.0
+#     torchvision v0.7.0
+#     torchaudio v0.6.0
+#
+#   nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
+#   l4t-pytorch:r32.5.0-pth1.7-py3
+#     PyTorch v1.7.0
+#     torchvision v0.8.0
+#     torchaudio v0.7.0
 FROM nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3
 
-# RUN apt-get update && apt-get --no-install-recommends -y install \
-#     build-essential \
-#     cmake \
-#     git \
-#     wget \
-#     unzip \
-#     yasm \
-#     pkg-config \
-#     libjpeg-dev \
-#     libtiff-dev \
-#     libavformat-dev \
-#     libswscale-dev \
-#     libtbbmalloc2 \
-#     libtbb-dev \
-#     libpng-dev \
-#     libpq-dev \
-#     && rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get upgrade
 RUN apt-get update && apt-get --no-install-recommends -y install \
-    unzip
+    wget
 
-# ENV TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
-RUN python3 -m pip install --upgrade pip
-# RUN pip install numpy==1.24.4 requests
+# Do NOT Need opencv-python-headless as l4t-pytorch:r35.2.1-pth2.0-py3 seems to have it. Gives cv2 duplicate error.
 
-RUN pip install protobuf numpy==1.24.4
+WORKDIR /
 
-WORKDIR /home/video
+RUN mkdir -p package/detect/pth package/util package/video $APP_MODEL_DIR
 
-# Install OpenCV
-# COPY ./opencvinstall.sh /home/video/opencvinstall.sh
-# RUN chmod 755 /home/video/opencvinstall.sh
-# RUN ./opencvinstall.sh
-
-# RUN pip install https://files.pythonhosted.org/packages/f0/f5/e4b6e27738d84aee328727ed16c387b75a5a08d433ead5c7cf5e4ee9a6ee/opencv_python_headless-4.10.0.82-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-# RUN ln -s \
-#     /usr/local/python/cv2/python-3.8/cv2.cpython-38m-x86_64-linux-gnu.so \
-#     /usr/local/lib/python3.8/dist-packages/cv2.so
-
-# RUN pip install https://files.pythonhosted.org/packages/f0/f5/e4b6e27738d84aee328727ed16c387b75a5a08d433ead5c7cf5e4ee9a6ee/opencv_python_headless-4.10.0.82-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-
-RUN pip install "opencv-python-headless<4.3"
-
-# Install a pretrained model
-RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth && \
-    mkdir -p /root/.cache/torch/hub/checkpoints/ && \
-    mv fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/ 
-
-ENV APP_MODEL_FMWK pth
-ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth_cpu
-ENV APP_ML_MODEL pth_cpu-model-1.0.0-mms.zip
+RUN wget https://download.pytorch.org/models/$APP_ML_MODEL
+# Renamed. Application expects with default prefix
+# RUN mv $APP_ML_MODEL default-$APP_ML_MODEL
 
 # WORKDIR /
 RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth_cpu

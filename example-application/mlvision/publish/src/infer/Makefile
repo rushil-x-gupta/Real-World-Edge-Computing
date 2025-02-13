@@ -13,10 +13,11 @@ build-tflite-cpu:
 	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cpu.${ARCH} .
 
 build-pth-cpu:
-	docker build --no-cache -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cpu.${ARCH} .
+	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cpu.${ARCH} .
 
 build-pth-cuda:
-	docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cuda.${ARCH} .
+# docker build -t ${CR_USERNAME}/${IMAGE_NAME} -f ./Dockerfile.${APP_MODEL_FMWK}.cuda.${ARCH} .
+	envsubst < ./Dockerfile.pth.cuda.${ARCH} | docker build -t ${CR_USERNAME}/${IMAGE_NAME} . -f -
 
 # Push the docker container to the DockerHub registry
 push:

@@ -87,6 +87,7 @@ class Config:
         self.detectPTH = os.environ['APP_ML_MODEL']
         self.tool = "Pytorch OpenCV"
         self.modelPTH = None
+        self.modelDir = "/"
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
         self.defaultModelPTH = "default-" + os.environ['APP_ML_MODEL']
         self.modelObjectId = self.defaultModelPTH
@@ -338,4 +339,7 @@ class Config:
     def setReloadPTHModel(self, flag):
         self.reloadPTHModel = flag
 #^^^^^^^^^^^^^^^^^^^---change for pytorch---^^^^^^^^^^^^^^^^^^^
+
+    def setModelDir(self, dir):
+            self.modelDir = dir
 
