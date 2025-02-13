@@ -1,0 +1,59 @@
+# READ:
+# As JetPack keeps evolving it's important to keep up with it.
+# To check the nvidia-jetpack version and details
+#
+# sudo apt-cache show nvidia-jetpack
+#
+# View available nvidia-jetpack base images to use
+# https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch
+#
+# JetPack 5.1 (L4T R35.2.1)
+#   l4t-pytorch:r35.2.1-pth2.0-py3
+#     PyTorch v2.0.0
+#     torchvision v0.14.1
+#     torchaudio v0.13.1
+#
+# JetPack 4.5 (L4T R32.5.0)
+#   nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3
+#   l4t-pytorch:r32.5.0-pth1.6-py3
+#     python 3.6.9
+#     PyTorch v1.6.0
+#     torchvision v0.7.0
+#     torchaudio v0.6.0
+#
+#   nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.7-py3
+#   l4t-pytorch:r32.5.0-pth1.7-py3
+#     PyTorch v1.7.0
+#     torchvision v0.8.0
+#     torchaudio v0.7.0
+FROM nvcr.io/nvidia/l4t-pytorch:r35.2.1-pth2.0-py3
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    wget
+
+# Do NOT Need opencv-python-headless as l4t-pytorch:r35.2.1-pth2.0-py3 seems to have it. Gives cv2 duplicate error.
+
+WORKDIR /
+
+RUN mkdir -p package/detect/pth package/util package/video $APP_MODEL_DIR
+
+RUN wget https://download.pytorch.org/models/$APP_ML_MODEL
+# Renamed. Application expects with default prefix
+# RUN mv $APP_ML_MODEL default-$APP_ML_MODEL
+
+# WORKDIR /
+RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth_cpu
+COPY service/package/detect/pth/*.py package/detect/pth/
+COPY service/package/detect/*.py package/detect/
+COPY service/package/video/*.py package/video/
+COPY service/package/util/*.py package/util/
+COPY service/package/*.py package/
+COPY service/videoObjectDetector.py .
+
+# RUN mkdir -p test_script
+# COPY test_script/*.zip test_script/
+# COPY test_script/testPTHDetector.py test_script/
+# COPY test_script/*.jpg test_script/
+
+# WORKDIR /
+# CMD /usr/local/bin/python3 videoObjectDetector.py

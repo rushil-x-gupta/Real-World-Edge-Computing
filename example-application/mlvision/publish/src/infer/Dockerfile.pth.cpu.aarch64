@@ -1,4 +1,6 @@
-FROM python:3.10-slim
+FROM python:3.8
+
+RUN lsb_release -a
 
 RUN apt-get update && apt-get --no-install-recommends -y install \
     build-essential \
@@ -18,35 +20,43 @@ RUN apt-get update && apt-get --no-install-recommends -y install \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy==1.26.4 torch torchvision requests
+# RUN apt-get upgrade
 
-RUN pip install https://files.pythonhosted.org/packages/f0/f5/e4b6e27738d84aee328727ed16c387b75a5a08d433ead5c7cf5e4ee9a6ee/opencv_python_headless-4.10.0.82-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-RUN ln -s \
-    /usr/local/python/cv2/python-3.10/cv2.cpython-310m-x86_64-linux-gnu.so \
-    /usr/local/lib/python3.10/site-packages/cv2.so
+RUN apt-get install -y libopenblas-dev 
+ENV TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+RUN python3 -m pip install --upgrade pip
+RUN pip install numpy==1.24.4 requests
+RUN python3 -m pip install --no-cache ${TORCH_INSTALL}
 
-# Install a pretrained model
-RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth && \
-    mkdir -p /root/.cache/torch/hub/checkpoints/ && \
-    mv fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/ 
+# RUN pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
 
-#ENV APP_MODEL_FMWK pth
-#ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth_cpu
-#ENV APP_MODEL_PTH pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip
+# RUN pip install https://files.pythonhosted.org/packages/f0/f5/e4b6e27738d84aee328727ed16c387b75a5a08d433ead5c7cf5e4ee9a6ee/opencv_python_headless-4.10.0.82-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+# RUN ln -s \
+#     /usr/local/python/cv2/python-3.8/cv2.cpython-38m-x86_64-linux-gnu.so \
+#     /usr/local/lib/python3.8/site-packages/cv2.so
 
-WORKDIR /
-RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth_cpu
-COPY service/package/detect/pth/*.py package/detect/pth/
-COPY service/package/detect/*.py package/detect/
-COPY service/package/video/*.py package/video/
-COPY service/package/util/*.py package/util/
-COPY service/package/*.py package/
-COPY service/videoObjectDetector.py .
+# # Install a pretrained model
+# RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth && \
+#     mkdir -p /root/.cache/torch/hub/checkpoints/ && \
+#     mv fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/ 
 
-#RUN mkdir -p test_script
-#COPY test_script/*.zip test_script/
-#COPY test_script/testPTHDetector.py test_script/
-#COPY test_script/*.jpg test_script/
+# ENV APP_MODEL_FMWK pth
+# ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth_cpu
+# ENV APP_ML_MODEL pth_cpu-model-1.0.0-mms.zip
 
-WORKDIR /
-CMD /usr/local/bin/python3 videoObjectDetector.py
+# WORKDIR /
+# RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth_cpu
+# COPY service/package/detect/pth/*.py package/detect/pth/
+# COPY service/package/detect/*.py package/detect/
+# COPY service/package/video/*.py package/video/
+# COPY service/package/util/*.py package/util/
+# COPY service/package/*.py package/
+# COPY service/videoObjectDetector.py .
+
+# #RUN mkdir -p test_script
+# #COPY test_script/*.zip test_script/
+# #COPY test_script/testPTHDetector.py test_script/
+# #COPY test_script/*.jpg test_script/
+
+# WORKDIR /
+# CMD /usr/local/bin/python3 videoObjectDetector.py
